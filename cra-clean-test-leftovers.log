@@ -1,0 +1,2 @@
+getconf: Unrecognized variable `DARWIN_USER_TEMP_DIR'
+free space: 80 GB → 80 GB
