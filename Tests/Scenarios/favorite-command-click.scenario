@@ -1,0 +1,35 @@
+# promise: #801
+# Command-clicking an existing Favorite opens its page in a selected Today tab without moving the Favorite.
+budget rss=900 stalls50=20
+pace 0.5
+seed settings.json {"hasSeenImportPrompt": true, "toolbarDefaultMigrated": true}
+
+cra://open?url=${PAGE}?n=fav
+expect-log loaded 127\.0\.0\.1 \(HTTP 200\)
+wait 1
+cra://action/favoriteTab
+wait 1
+cra://open?url=${PAGE}?n=other
+expect-log loaded 127\.0\.0\.1 \(HTTP 200\)
+wait 1
+
+# An ordinary click still selects the original Favorite and doesn't add a Today tab.
+cra://debug?clickAt=40,105
+wait 1
+cra://debug?selectedTab=plain
+expect-log selected tab plain: \S+n=fav$
+cra://debug?todayOrder=plain
+expect-log today order plain: \S+n=other$
+
+# Command-click creates and selects a regular Today tab with the Favorite's page.
+cra://debug?selectTab=n=other
+wait 1
+cra://debug?clickAt=40,105&mods=1048576
+wait 1
+cra://debug?selectedTab=command
+expect-log selected tab command: \S+n=fav$
+cra://debug?todayOrder=command
+expect-log today order command: \S+n=fav \| \S+n=other$
+cra://debug?favoriteMenu=1&label=command
+expect-log favorite menu command: Copy Link
+cra://debug?checkStore=1
