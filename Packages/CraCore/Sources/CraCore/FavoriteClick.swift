@@ -5,9 +5,11 @@
 public enum FavoriteClick: Equatable, Sendable {
     case select
     case backToPinnedPage
+    case openInNewTab
 
     /// `clickCount` is AppKit's for the release (2 for the second click of a double-click).
-    public static func action(clickCount: Int, navigatedAway: Bool) -> FavoriteClick {
-        clickCount == 2 && navigatedAway ? .backToPinnedPage : .select
+    public static func action(clickCount: Int, navigatedAway: Bool, command: Bool = false) -> FavoriteClick {
+        if command { return .openInNewTab }
+        return clickCount == 2 && navigatedAway ? .backToPinnedPage : .select
     }
 }

@@ -17,4 +17,10 @@ struct FavoriteClickTests {
         #expect(FavoriteClick.action(clickCount: 2, navigatedAway: false) == .select)
         #expect(FavoriteClick.action(clickCount: 3, navigatedAway: true) == .select)
     }
+
+    @Test(.bug("https://github.com/VictorKildahl/cra/issues/801"))
+    func commandClickOpensACopyEvenWhenTheFavoriteHasNavigatedAway() {
+        #expect(FavoriteClick.action(clickCount: 1, navigatedAway: false, command: true) == .openInNewTab)
+        #expect(FavoriteClick.action(clickCount: 2, navigatedAway: true, command: true) == .openInNewTab)
+    }
 }
